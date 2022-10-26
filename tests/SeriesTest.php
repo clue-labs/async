@@ -98,6 +98,7 @@ class SeriesTest extends TestCase
         );
 
         $promise = React\Async\series($tasks);
+        assert(method_exists($promise, 'cancel'));
         $promise->cancel();
 
         $this->assertSame(1, $cancelled);

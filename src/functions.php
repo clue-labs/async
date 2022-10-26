@@ -214,7 +214,7 @@ function parallel(array $tasks)
     };
 
     foreach ($tasks as $i => $task) {
-        $taskCallback = function ($result) use (&$results, &$pending, $numTasks, $i, $deferred) {
+        $taskCallback = function ($result) use (&$results, $numTasks, $i, $deferred) {
             $results[$i] = $result;
 
             if (count($results) === $numTasks) {
@@ -251,9 +251,9 @@ function series(array $tasks)
     });
     $results = array();
 
-    /** @var callable():void $next */
     $taskCallback = function ($result) use (&$results, &$next) {
         $results[] = $result;
+        assert($next instanceof \Closure);
         $next();
     };
 

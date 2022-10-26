@@ -300,7 +300,7 @@ class AwaitTest extends TestCase
                 $this->expectExceptionCode($exceptionCode);
             }
         } else {
-            // legacy PHPUnit 4
+            // @phpstan-ignore-next-line legacy PHPUnit 4
             parent::setExpectedException($exception, $exceptionMessage, $exceptionCode);
         }
     }

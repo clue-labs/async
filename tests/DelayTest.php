@@ -17,7 +17,7 @@ class DelayTest extends TestCase
             // PHPUnit 7+
             $this->assertEqualsWithDelta(0.02, $time, 0.01);
         } else {
-            // legacy PHPUnit
+            // @phpstan-ignore-next-line legacy PHPUnit
             $this->assertEquals(0.02, $time, '', 0.01);
         }
     }

@@ -105,6 +105,7 @@ class WaterfallTest extends TestCase
         );
 
         $promise = React\Async\waterfall($tasks);
+        assert(method_exists($promise, 'cancel'));
         $promise->cancel();
 
         $this->assertSame(1, $cancelled);
