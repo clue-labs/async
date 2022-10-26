@@ -7,6 +7,7 @@ use React\EventLoop\Loop;
 
 class DelayTest extends TestCase
 {
+    /** @return void */
     public function testDelayBlocksForGivenPeriod()
     {
         $time = microtime(true);
@@ -22,6 +23,7 @@ class DelayTest extends TestCase
         }
     }
 
+    /** @return void */
     public function testDelaySmallPeriodBlocksForCloseToZeroSeconds()
     {
         $time = microtime(true);
@@ -31,6 +33,7 @@ class DelayTest extends TestCase
         $this->assertLessThan(0.01, $time);
     }
 
+    /** @return void */
     public function testDelayNegativePeriodBlocksForCloseToZeroSeconds()
     {
         $time = microtime(true);
@@ -40,6 +43,7 @@ class DelayTest extends TestCase
         $this->assertLessThan(0.01, $time);
     }
 
+    /** @return void */
     public function testDelayRunsOtherEventsWhileWaiting()
     {
         $buffer = 'a';

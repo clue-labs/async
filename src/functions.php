@@ -54,6 +54,8 @@ function await(PromiseInterface $promise)
     $resolved = null;
     $exception = null;
     $rejected = false;
+
+    /** @var bool $loopStarted */
     $loopStarted = false;
 
     $promise->then(
@@ -184,6 +186,7 @@ function delay($seconds)
  */
 function parallel(array $tasks)
 {
+    /** @var array<int,PromiseInterface> $pending */
     $pending = array();
     $deferred = new Deferred(function () use (&$pending) {
         foreach ($pending as $promise) {
@@ -244,6 +247,7 @@ function series(array $tasks)
 {
     $pending = null;
     $deferred = new Deferred(function () use (&$pending) {
+        /** @var ?PromiseInterface $pending */
         if ($pending instanceof PromiseInterface && \method_exists($pending, 'cancel')) {
             $pending->cancel();
         }
@@ -253,7 +257,7 @@ function series(array $tasks)
 
     $taskCallback = function ($result) use (&$results, &$next) {
         $results[] = $result;
-        assert($next instanceof \Closure);
+        /** @var \Closure $next */
         $next();
     };
 
@@ -264,6 +268,8 @@ function series(array $tasks)
         }
 
         $task = array_shift($tasks);
+        assert(is_callable($task));
+
         $promise = call_user_func($task);
         assert($promise instanceof PromiseInterface);
         $pending = $promise;
@@ -277,13 +283,14 @@ function series(array $tasks)
 }
 
 /**
- * @param array<callable(mixed=):PromiseInterface<mixed>> $tasks
+ * @param array<(callable():PromiseInterface<mixed>)|(callable(mixed):PromiseInterface<mixed>)> $tasks
  * @return PromiseInterface<mixed>
  */
 function waterfall(array $tasks)
 {
     $pending = null;
     $deferred = new Deferred(function () use (&$pending) {
+        /** @var ?PromiseInterface $pending */
         if ($pending instanceof PromiseInterface && \method_exists($pending, 'cancel')) {
             $pending->cancel();
         }
@@ -298,6 +305,8 @@ function waterfall(array $tasks)
         }
 
         $task = array_shift($tasks);
+        assert(is_callable($task));
+
         $promise = call_user_func_array($task, func_get_args());
         assert($promise instanceof PromiseInterface);
         $pending = $promise;

@@ -8,6 +8,7 @@ use React\Promise\Promise;
 
 class ParallelTest extends TestCase
 {
+    /** @return void */
     public function testParallelWithoutTasks()
     {
         $tasks = array();
@@ -17,6 +18,7 @@ class ParallelTest extends TestCase
         $promise->then($this->expectCallableOnceWith(array()));
     }
 
+    /** @return void */
     public function testParallelWithTasks()
     {
         $tasks = array(
@@ -49,6 +51,7 @@ class ParallelTest extends TestCase
         $timer->assertInRange(0.1, 0.2);
     }
 
+    /** @return void */
     public function testParallelWithErrorReturnsPromiseRejectedWithExceptionFromTaskAndStopsCallingAdditionalTasks()
     {
         $called = 0;
@@ -81,6 +84,7 @@ class ParallelTest extends TestCase
         $this->assertSame(2, $called);
     }
 
+    /** @return void */
     public function testParallelWithErrorWillCancelPendingPromises()
     {
         $cancelled = 0;
@@ -110,6 +114,7 @@ class ParallelTest extends TestCase
         $this->assertSame(1, $cancelled);
     }
 
+    /** @return void */
     public function testParallelWillCancelPendingPromisesWhenCallingCancelOnResultingPromise()
     {
         $cancelled = 0;
@@ -134,6 +139,7 @@ class ParallelTest extends TestCase
         $this->assertSame(2, $cancelled);
     }
 
+    /** @return void */
     public function testParallelWithDelayedErrorReturnsPromiseRejectedWithExceptionFromTask()
     {
         $called = 0;

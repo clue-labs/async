@@ -8,6 +8,7 @@ use React\Promise\Promise;
 
 class AwaitTest extends TestCase
 {
+    /** @return void */
     public function testAwaitThrowsExceptionWhenPromiseIsRejectedWithException()
     {
         $promise = new Promise(function () {
@@ -18,6 +19,7 @@ class AwaitTest extends TestCase
         React\Async\await($promise);
     }
 
+    /** @return void */
     public function testAwaitThrowsUnexpectedValueExceptionWhenPromiseIsRejectedWithFalse()
     {
         if (!interface_exists('React\Promise\CancellablePromiseInterface')) {
@@ -32,6 +34,7 @@ class AwaitTest extends TestCase
         React\Async\await($promise);
     }
 
+    /** @return void */
     public function testAwaitThrowsUnexpectedValueExceptionWhenPromiseIsRejectedWithNull()
     {
         if (!interface_exists('React\Promise\CancellablePromiseInterface')) {
@@ -48,6 +51,7 @@ class AwaitTest extends TestCase
 
     /**
      * @requires PHP 7
+     * @return void
      */
     public function testAwaitThrowsErrorWhenPromiseIsRejectedWithError()
     {
@@ -59,6 +63,7 @@ class AwaitTest extends TestCase
         React\Async\await($promise);
     }
 
+    /** @return void */
     public function testAwaitReturnsValueWhenPromiseIsFullfilled()
     {
         $promise = new Promise(function ($resolve) {
@@ -68,6 +73,7 @@ class AwaitTest extends TestCase
         $this->assertEquals(42, React\Async\await($promise));
     }
 
+    /** @return void */
     public function testAwaitReturnsValueWhenPromiseIsFulfilledEvenWhenOtherTimerStopsLoop()
     {
         $promise = new Promise(function ($resolve) {
@@ -82,6 +88,7 @@ class AwaitTest extends TestCase
         $this->assertEquals(2, React\Async\await($promise));
     }
 
+    /** @return void */
     public function testAwaitWithAlreadyFulfilledPromiseWillReturnWithoutRunningLoop()
     {
         $now = true;
@@ -98,6 +105,7 @@ class AwaitTest extends TestCase
         $this->assertTrue($now);
     }
 
+    /** @return void */
     public function testAwaitWithAlreadyFulfilledPromiseWillReturnWithoutStoppingLoop()
     {
         $ticks = 0;
@@ -126,6 +134,7 @@ class AwaitTest extends TestCase
         $this->assertEquals(2, $ticks);
     }
 
+    /** @return void */
     public function testAwaitWithPendingPromiseThatWillResolveWillStopLoopBeforeLastTimerFinishes()
     {
         $promise = new Promise(function ($resolve) {
@@ -157,6 +166,7 @@ class AwaitTest extends TestCase
         $this->assertEquals(1, $ticks);
     }
 
+    /** @return void */
     public function testAwaitWithAlreadyRejectedPromiseWillReturnWithoutStoppingLoop()
     {
         $ticks = 0;
@@ -189,6 +199,7 @@ class AwaitTest extends TestCase
         $this->assertEquals(2, $ticks);
     }
 
+    /** @return void */
     public function testAwaitWithPendingPromiseThatWillRejectWillStopLoopBeforeLastTimerFinishes()
     {
         $promise = new Promise(function ($_, $reject) {
@@ -225,6 +236,7 @@ class AwaitTest extends TestCase
         $this->assertEquals(1, $ticks);
     }
 
+    /** @return void */
     public function testAwaitShouldNotCreateAnyGarbageReferencesForResolvedPromise()
     {
         if (class_exists('React\Promise\When') && PHP_VERSION_ID >= 50400) {
@@ -242,6 +254,7 @@ class AwaitTest extends TestCase
         $this->assertEquals(0, gc_collect_cycles());
     }
 
+    /** @return void */
     public function testAwaitShouldNotCreateAnyGarbageReferencesForRejectedPromise()
     {
         if (class_exists('React\Promise\When')) {
@@ -263,6 +276,7 @@ class AwaitTest extends TestCase
         $this->assertEquals(0, gc_collect_cycles());
     }
 
+    /** @return void */
     public function testAwaitShouldNotCreateAnyGarbageReferencesForPromiseRejectedWithNullValue()
     {
         if (!interface_exists('React\Promise\CancellablePromiseInterface')) {
@@ -288,6 +302,12 @@ class AwaitTest extends TestCase
         $this->assertEquals(0, gc_collect_cycles());
     }
 
+    /**
+     * @param class-string<\Throwable> $exception
+     * @param string $exceptionMessage
+     * @param int $exceptionCode
+     * @return void
+     */
     public function setExpectedException($exception, $exceptionMessage = '', $exceptionCode = null)
     {
         if (method_exists($this, 'expectException')) {

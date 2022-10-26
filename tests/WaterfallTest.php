@@ -8,6 +8,7 @@ use React\Promise\Promise;
 
 class WaterfallTest extends TestCase
 {
+    /** @return void */
     public function testWaterfallWithoutTasks()
     {
         $tasks = array();
@@ -17,6 +18,7 @@ class WaterfallTest extends TestCase
         $promise->then($this->expectCallableOnceWith(null));
     }
 
+    /** @return void */
     public function testWaterfallWithTasks()
     {
         $tasks = array(
@@ -56,6 +58,7 @@ class WaterfallTest extends TestCase
         $timer->assertInRange(0.15, 0.30);
     }
 
+    /** @return void */
     public function testWaterfallWithError()
     {
         $called = 0;
@@ -87,6 +90,7 @@ class WaterfallTest extends TestCase
         $this->assertSame(1, $called);
     }
 
+    /** @return void */
     public function testWaterfallWillCancelFirstPendingPromiseWhenCallingCancelOnResultingPromise()
     {
         $cancelled = 0;

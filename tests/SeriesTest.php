@@ -8,6 +8,7 @@ use React\Promise\Promise;
 
 class SeriesTest extends TestCase
 {
+    /** @return void */
     public function testSeriesWithoutTasks()
     {
         $tasks = array();
@@ -17,6 +18,7 @@ class SeriesTest extends TestCase
         $promise->then($this->expectCallableOnceWith(array()));
     }
 
+    /** @return void */
     public function testSeriesWithTasks()
     {
         $tasks = array(
@@ -49,6 +51,7 @@ class SeriesTest extends TestCase
         $timer->assertInRange(0.10, 0.20);
     }
 
+    /** @return void */
     public function testSeriesWithError()
     {
         $called = 0;
@@ -80,6 +83,7 @@ class SeriesTest extends TestCase
         $this->assertSame(1, $called);
     }
 
+    /** @return void */
     public function testSeriesWillCancelFirstPendingPromiseWhenCallingCancelOnResultingPromise()
     {
         $cancelled = 0;
