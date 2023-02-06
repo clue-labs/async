@@ -1,6 +1,7 @@
 /.gitattributes export-ignore
 /.github/ export-ignore
 /.gitignore export-ignore
-/phpunit.xml.dist export-ignore
-/phpunit.xml.legacy export-ignore
+/phpunit.xml export-ignore
+/phpunit-4.8.xml export-ignore
+/phpunit-9.6.xml export-ignore
 /tests/ export-ignore
