@@ -2,17 +2,20 @@
 
 namespace React\Tests\Async;
 
-use React;
+use PHPUnit\Framework\Attributes\DataProvider;
+use React\Async\FiberMap;
 use React\EventLoop\Loop;
 use React\Promise\Deferred;
 use React\Promise\Promise;
+use React\Promise\PromiseInterface;
 use function React\Async\async;
+use function React\Async\await;
+use function React\Promise\reject;
+use function React\Promise\resolve;
 
 class AwaitTest extends TestCase
 {
-    /**
-     * @dataProvider provideAwaiters
-     */
+    #[DataProvider('provideAwaiters')]
     public function testAwaitThrowsExceptionWhenPromiseIsRejectedWithException(callable $await)
     {
         $promise = new Promise(function () {
@@ -24,9 +27,7 @@ class AwaitTest extends TestCase
         $await($promise);
     }
 
-    /**
-     * @dataProvider provideAwaiters
-     */
+    #[DataProvider('provideAwaiters')]
     public function testAwaitThrowsExceptionWithoutRunningLoop(callable $await)
     {
         $now = true;
@@ -45,9 +46,7 @@ class AwaitTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider provideAwaiters
-     */
+    #[DataProvider('provideAwaiters')]
     public function testAwaitThrowsExceptionImmediatelyWhenPromiseIsRejected(callable $await)
     {
         $deferred = new Deferred();
@@ -69,9 +68,7 @@ class AwaitTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider provideAwaiters
-     */
+    #[DataProvider('provideAwaiters')]
     public function testAwaitAsyncThrowsExceptionImmediatelyWhenPromiseIsRejected(callable $await)
     {
         $deferred = new Deferred();
@@ -97,9 +94,7 @@ class AwaitTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider provideAwaiters
-     */
+    #[DataProvider('provideAwaiters')]
     public function testAwaitThrowsExceptionImmediatelyInCustomFiberWhenPromiseIsRejected(callable $await)
     {
         $fiber = new \Fiber(function () use ($await) {
@@ -118,9 +113,7 @@ class AwaitTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider provideAwaiters
-     */
+    #[DataProvider('provideAwaiters')]
     public function testAwaitThrowsUnexpectedValueExceptionWhenPromiseIsRejectedWithFalse(callable $await)
     {
         if (!interface_exists('React\Promise\CancellablePromiseInterface')) {
@@ -136,9 +129,7 @@ class AwaitTest extends TestCase
         $await($promise);
     }
 
-    /**
-     * @dataProvider provideAwaiters
-     */
+    #[DataProvider('provideAwaiters')]
     public function testAwaitThrowsUnexpectedValueExceptionWhenPromiseIsRejectedWithNull(callable $await)
     {
         if (!interface_exists('React\Promise\CancellablePromiseInterface')) {
@@ -160,9 +151,7 @@ class AwaitTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider provideAwaiters
-     */
+    #[DataProvider('provideAwaiters')]
     public function testAwaitThrowsErrorWhenPromiseIsRejectedWithError(callable $await)
     {
         $promise = new Promise(function ($_, $reject) {
@@ -175,9 +164,7 @@ class AwaitTest extends TestCase
         $await($promise);
     }
 
-    /**
-     * @dataProvider provideAwaiters
-     */
+    #[DataProvider('provideAwaiters')]
     public function testAwaitReturnsValueWhenPromiseIsFullfilled(callable $await)
     {
         $promise = new Promise(function ($resolve) {
@@ -187,9 +174,7 @@ class AwaitTest extends TestCase
         $this->assertEquals(42, $await($promise));
     }
 
-    /**
-     * @dataProvider provideAwaiters
-     */
+    #[DataProvider('provideAwaiters')]
     public function testAwaitReturnsValueImmediatelyWithoutRunningLoop(callable $await)
     {
         $now = true;
@@ -205,9 +190,7 @@ class AwaitTest extends TestCase
         $this->assertTrue($now);
     }
 
-    /**
-     * @dataProvider provideAwaiters
-     */
+    #[DataProvider('provideAwaiters')]
     public function testAwaitReturnsValueImmediatelyWhenPromiseIsFulfilled(callable $await)
     {
         $deferred = new Deferred();
@@ -226,9 +209,7 @@ class AwaitTest extends TestCase
         $this->assertEquals(1, $ticks);
     }
 
-    /**
-     * @dataProvider provideAwaiters
-     */
+    #[DataProvider('provideAwaiters')]
     public function testAwaitAsyncReturnsValueImmediatelyWhenPromiseIsFulfilled(callable $await)
     {
         $deferred = new Deferred();
@@ -251,9 +232,7 @@ class AwaitTest extends TestCase
         $this->assertEquals(1, $ticks);
     }
 
-    /**
-     * @dataProvider provideAwaiters
-     */
+    #[DataProvider('provideAwaiters')]
     public function testAwaitReturnsValueImmediatelyInCustomFiberWhenPromiseIsFulfilled(callable $await)
     {
         $fiber = new \Fiber(function () use ($await) {
@@ -270,9 +249,7 @@ class AwaitTest extends TestCase
         $this->assertEquals(42, $fiber->getReturn());
     }
 
-    /**
-     * @dataProvider provideAwaiters
-     */
+    #[DataProvider('provideAwaiters')]
     public function testAwaitShouldNotCreateAnyGarbageReferencesForResolvedPromise(callable $await)
     {
         if (class_exists('React\Promise\When')) {
@@ -290,9 +267,7 @@ class AwaitTest extends TestCase
         $this->assertEquals(0, gc_collect_cycles());
     }
 
-    /**
-     * @dataProvider provideAwaiters
-     */
+    #[DataProvider('provideAwaiters')]
     public function testAwaitShouldNotCreateAnyGarbageReferencesForRejectedPromise(callable $await)
     {
         if (class_exists('React\Promise\When')) {
@@ -314,9 +289,7 @@ class AwaitTest extends TestCase
         $this->assertEquals(0, gc_collect_cycles());
     }
 
-    /**
-     * @dataProvider provideAwaiters
-     */
+    #[DataProvider('provideAwaiters')]
     public function testAwaitShouldNotCreateAnyGarbageReferencesForPromiseRejectedWithNullValue(callable $await)
     {
         if (!interface_exists('React\Promise\CancellablePromiseInterface')) {
@@ -342,19 +315,15 @@ class AwaitTest extends TestCase
         $this->assertEquals(0, gc_collect_cycles());
     }
 
-    /**
-     * @dataProvider provideAwaiters
-     */
+    #[DataProvider('provideAwaiters')]
     public function testAlreadyFulfilledPromiseShouldNotSuspendFiber(callable $await)
     {
         for ($i = 0; $i < 6; $i++) {
-            $this->assertSame($i, $await(React\Promise\resolve($i)));
+            $this->assertSame($i, $await(resolve($i)));
         }
     }
 
-    /**
-     * @dataProvider provideAwaiters
-     */
+    #[DataProvider('provideAwaiters')]
     public function testNestedAwaits(callable $await)
     {
         $this->assertTrue($await(new Promise(function ($resolve) use ($await) {
@@ -372,9 +341,7 @@ class AwaitTest extends TestCase
         })));
     }
 
-    /**
-     * @dataProvider provideAwaiters
-     */
+    #[DataProvider('provideAwaiters')]
     public function testResolvedPromisesShouldBeDetached(callable $await)
     {
         $await(async(function () use ($await): int {
@@ -382,15 +349,13 @@ class AwaitTest extends TestCase
             $await(new Promise(function ($resolve) {
                 Loop::addTimer(0.01, fn() => $resolve(null));
             }));
-            $this->assertNull(React\Async\FiberMap::getPromise($fiber));
+            $this->assertNull(FiberMap::getPromise($fiber));
 
             return time();
         })());
     }
 
-    /**
-     * @dataProvider provideAwaiters
-     */
+    #[DataProvider('provideAwaiters')]
     public function testRejectedPromisesShouldBeDetached(callable $await)
     {
         $this->expectException(\Exception::class);
@@ -399,20 +364,20 @@ class AwaitTest extends TestCase
         $await(async(function () use ($await): int {
             $fiber = \Fiber::getCurrent();
             try {
-                $await(React\Promise\reject(new \Exception('Boom!')));
+                $await(reject(new \Exception('Boom!')));
             } catch (\Throwable $throwable) {
                 throw $throwable;
             } finally {
-                $this->assertNull(React\Async\FiberMap::getPromise($fiber));
+                $this->assertNull(FiberMap::getPromise($fiber));
             }
 
             return time();
         })());
     }
 
-    public function provideAwaiters(): iterable
+    public static function provideAwaiters(): iterable
     {
-        yield 'await' => [static fn (React\Promise\PromiseInterface $promise): mixed => React\Async\await($promise)];
-        yield 'async' => [static fn (React\Promise\PromiseInterface $promise): mixed => React\Async\await(React\Async\async(static fn(): mixed => $promise)())];
+        yield 'await' => [static fn (PromiseInterface $promise): mixed => await($promise)];
+        yield 'async' => [static fn (PromiseInterface $promise): mixed => await(async(static fn(): mixed => $promise)())];
     }
 }
